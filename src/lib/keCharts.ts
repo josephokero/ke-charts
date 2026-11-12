@@ -61,9 +61,9 @@ const KE_VOTE_PICK_KEY = "ke_charts_my_vote";
 
 /** Seed so bars look alive before local votes pile up. */
 const KE_VOTE_SEED: Record<KeVoteId, number> = {
-  velt: 128,
-  tradewise: 74,
-  easytrade: 61,
+  tradewise: 128,
+  easytrade: 74,
+  velt: 61,
 };
 
 export type KeVoteState = {
@@ -166,9 +166,9 @@ export function openSafeExternal(raw: string): boolean {
 export const KE_INDEX_PAGES: KePage[] = [
   "home",
   "compare",
-  "velt",
   "tradewise",
   "easytrade",
+  "velt",
   "how",
   "faq",
   "risk",
@@ -208,7 +208,7 @@ export const KE_FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Which platforms are listed?",
-    a: "Right now: VELT, TradeWise, and EasyTrade. Each card opens the official site in a new tab.",
+    a: "Right now: TradeWise, EasyTrade, and VELT. Each card opens the official site in a new tab.",
   },
   {
     q: "Do I create an account on KE Charts?",

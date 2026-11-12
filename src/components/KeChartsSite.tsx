@@ -79,23 +79,23 @@ const PAGE_META: Record<KePage, { title: string; desc: string }> = {
   },
   compare: {
     title: "Compare desks — KE Charts",
-    desc: "Side-by-side compare VELT, TradeWise, and EasyTrade for Kenya traders.",
+    desc: "Side-by-side compare TradeWise, EasyTrade, and VELT for Kenya traders.",
   },
   terms: {
     title: "Terms — KE Charts",
     desc: "Terms for the KE Charts directory website only.",
   },
-  velt: {
-    title: "VELT — KE Charts",
-    desc: "Open VELT Binary — Kenya’s #1 digit desk with AI scan and M-Pesa.",
-  },
   tradewise: {
     title: "TradeWise — KE Charts",
-    desc: "Open TradeWise Binary — Even/Odd, Match/Differ, Over/Under on one ticket.",
+    desc: "Open TradeWise Binary — Kenya’s #1 desk with Even/Odd, Match/Differ, Over/Under.",
   },
   easytrade: {
     title: "EasyTrade — KE Charts",
-    desc: "Open EasyTrade Binary — simple last-digit desk with practice funds.",
+    desc: "Open EasyTrade Binary — #2 pick, simple last-digit desk with practice funds.",
+  },
+  velt: {
+    title: "VELT — KE Charts",
+    desc: "Open VELT Binary — digits, AI scan, and M-Pesa cash desk.",
   },
 };
 
