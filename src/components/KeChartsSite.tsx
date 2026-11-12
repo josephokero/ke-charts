@@ -12,6 +12,7 @@ import {
   getKeVotes,
   isKeDeskPage,
   kePathFor,
+  openSafeExternal,
   trackKeClick,
   type KePage,
   type KeVoteId,
@@ -119,6 +120,27 @@ function setIcon(rel: string, href: string, type?: string) {
   if (type) el.type = type;
 }
 
+function setCanonical(href: string) {
+  let el = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (!el) {
+    el = document.createElement("link");
+    el.rel = "canonical";
+    document.head.appendChild(el);
+  }
+  el.href = href;
+}
+
+function setJsonLd(id: string, data: Record<string, unknown>) {
+  let el = document.getElementById(id) as HTMLScriptElement | null;
+  if (!el) {
+    el = document.createElement("script");
+    el.type = "application/ld+json";
+    el.id = id;
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify(data);
+}
+
 export function KeChartsSite({ page, onNavigate }: Props) {
   const [theme, setTheme] = useState<KeTheme>(() =>
     typeof window !== "undefined" ? readTheme() : "light",
@@ -136,12 +158,15 @@ export function KeChartsSite({ page, onNavigate }: Props) {
   useEffect(() => {
     const meta = PAGE_META[page];
     const prevTitle = document.title;
-    const ogUrl = `${typeof window !== "undefined" ? window.location.origin : KE_ORIGIN}${kePathFor(page)}`;
+    const path = kePathFor(page);
+    const ogUrl = path === "/" ? `${KE_ORIGIN}/` : `${KE_ORIGIN}${path}`;
     document.title = meta.title;
     setIcon("icon", KE_ICON, "image/svg+xml");
     setIcon("apple-touch-icon", KE_ICON);
     setIcon("shortcut icon", KE_ICON);
+    setCanonical(ogUrl);
     setMeta("name", "description", meta.desc);
+    setMeta("name", "robots", "index, follow, max-image-preview:large, max-snippet:-1");
     setMeta("name", "application-name", KE_BRAND);
     setMeta("name", "apple-mobile-web-app-title", KE_BRAND);
     setMeta("name", "theme-color", theme === "dark" ? "#0b0c0e" : "#f2f3f5");
@@ -149,12 +174,58 @@ export function KeChartsSite({ page, onNavigate }: Props) {
     setMeta("property", "og:description", meta.desc);
     setMeta("property", "og:site_name", KE_BRAND);
     setMeta("property", "og:url", ogUrl);
-    setMeta("property", "og:image", `${typeof window !== "undefined" ? window.location.origin : KE_ORIGIN}${KE_OG}`);
+    setMeta("property", "og:image", `${KE_ORIGIN}${KE_OG}`);
     setMeta("property", "og:type", "website");
+    setMeta("property", "og:locale", "en_KE");
     setMeta("name", "twitter:card", "summary_large_image");
     setMeta("name", "twitter:title", meta.title);
     setMeta("name", "twitter:description", meta.desc);
-    setMeta("name", "twitter:image", `${typeof window !== "undefined" ? window.location.origin : KE_ORIGIN}${KE_OG}`);
+    setMeta("name", "twitter:image", `${KE_ORIGIN}${KE_OG}`);
+
+    setJsonLd("ke-ld-website", {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: KE_BRAND,
+      url: KE_ORIGIN,
+      description: PAGE_META.home.desc,
+      inLanguage: "en-KE",
+      potentialAction: {
+        "@type": "ViewAction",
+        target: `${KE_ORIGIN}/compare`,
+      },
+    });
+
+    setJsonLd("ke-ld-list", {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Kenya binary trading platforms",
+      itemListElement: TIKTOK_PLATFORMS.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: p.name,
+        url: `${KE_ORIGIN}${kePathFor(p.id)}`,
+        description: p.tagline,
+      })),
+    });
+
+    setJsonLd("ke-ld-breadcrumb", {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: KE_ORIGIN },
+        ...(page === "home"
+          ? []
+          : [
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: meta.title.split(" — ")[0] || meta.title,
+                item: ogUrl,
+              },
+            ]),
+      ],
+    });
+
     return () => {
       document.title = prevTitle;
     };
@@ -167,7 +238,7 @@ export function KeChartsSite({ page, onNavigate }: Props) {
 
   const openDesk = (p: TikTokPlatform, source: string) => {
     trackKeClick(p.id, source);
-    window.open(p.href, "_blank", "noopener,noreferrer");
+    openSafeExternal(p.href);
   };
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
@@ -296,8 +367,13 @@ export function KeChartsSite({ page, onNavigate }: Props) {
             <a
               href={KE_TIKTOK}
               target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackKeClick("tiktok", "sticky")}
+              rel="noopener noreferrer nofollow"
+              referrerPolicy="strict-origin-when-cross-origin"
+              onClick={(e) => {
+                e.preventDefault();
+                trackKeClick("tiktok", "sticky");
+                openSafeExternal(KE_TIKTOK);
+              }}
             >
               TikTok
             </a>
@@ -451,7 +527,12 @@ function Vote() {
           href="https://wa.me/447470413701"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackKeClick("josh", "whatsapp")}
+          referrerPolicy="no-referrer"
+          onClick={(e) => {
+            e.preventDefault();
+            trackKeClick("josh", "whatsapp");
+            openSafeExternal("https://wa.me/447470413701");
+          }}
         >
           WhatsApp +44 7470 413701
         </a>

@@ -110,6 +110,7 @@ export function getKeVotes(): KeVoteState {
 
 /** One vote per browser; changing pick moves the vote. */
 export function castKeVote(id: KeVoteId): KeVoteState {
+  if (id !== "velt" && id !== "tradewise" && id !== "easytrade") return getKeVotes();
   const local = readLocalVotes();
   let mine: KeVoteId | null = null;
   try {
@@ -130,6 +131,49 @@ export function castKeVote(id: KeVoteId): KeVoteState {
   trackKeClick(id, "vote");
   return getKeVotes();
 }
+
+/** Only allow listed HTTPS desk / contact URLs to open. */
+const KE_SAFE_HOSTS = new Set([
+  "veltbinary.app",
+  "www.veltbinary.app",
+  "tradewisebinary.com",
+  "www.tradewisebinary.com",
+  "easytradebinary.com",
+  "www.easytradebinary.com",
+  "www.tiktok.com",
+  "tiktok.com",
+  "wa.me",
+  "api.whatsapp.com",
+]);
+
+export function isSafeExternalUrl(raw: string): boolean {
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:") return false;
+    if (u.username || u.password) return false;
+    return KE_SAFE_HOSTS.has(u.hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
+export function openSafeExternal(raw: string): boolean {
+  if (!isSafeExternalUrl(raw)) return false;
+  window.open(raw, "_blank", "noopener,noreferrer");
+  return true;
+}
+
+export const KE_INDEX_PAGES: KePage[] = [
+  "home",
+  "compare",
+  "velt",
+  "tradewise",
+  "easytrade",
+  "how",
+  "faq",
+  "risk",
+  "terms",
+];
 
 export function trackKeClick(platformId: string, source: string) {
   try {

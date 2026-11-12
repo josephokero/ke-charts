@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kecharts.com/sitemap.xml
+Sitemap: https://ke-charts.vercel.app/sitemap.xml
+
+Host: https://kecharts.com
