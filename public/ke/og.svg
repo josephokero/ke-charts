@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#F2F3F5"/>
+  <rect x="72" y="72" width="88" height="88" rx="22" fill="#111315"/>
+  <rect x="90" y="122" width="14" height="22" rx="3" fill="#fff"/>
+  <rect x="110" y="108" width="14" height="36" rx="3" fill="#fff"/>
+  <rect x="130" y="96" width="14" height="48" rx="3" fill="#fff"/>
+  <rect x="150" y="112" width="8" height="32" rx="2" fill="#fff" opacity="0.35"/>
+  <text x="188" y="132" fill="#111315" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="800">KE Charts</text>
+  <text x="72" y="260" fill="#111315" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800">Kenyas top binary desks.</text>
+  <text x="72" y="330" fill="#5C636B" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="500">VELT · TradeWise · EasyTrade  one tap to open.</text>
+  <rect x="72" y="400" width="220" height="64" rx="32" fill="#E11D2E"/>
+  <text x="118" y="442" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Open desks</text>
+</svg>
